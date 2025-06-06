@@ -5,7 +5,7 @@ public abstract class SpellBase : ScriptableObject, ISpell
 {
     [SerializeField] private string id;
     [SerializeField] private SpellCategory category;
-    [SerializeField] private bool canTriggerNext = true;
+    [SerializeField] private bool canTriggerNext = false;
 
     // Nouveau flag : ce sort déclenche le suivant **à l'impact**
     [SerializeField] private bool triggerNextOnImpact = false;

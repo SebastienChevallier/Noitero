@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class WeaponInstance
@@ -29,9 +30,10 @@ public class WeaponInstance
 
     private IEnumerator CastNextSpell(Vector3 direction)
     {
+
         SpellExecutionContext context = new()
         {
-            Caster = _caster,
+            Caster = _caster.position,
             Direction = direction
         };
 
@@ -45,6 +47,11 @@ public class WeaponInstance
                 _pendingModifiers.Add(spell);
                 continue; // ne bloque pas le clic suivant
             }
+
+            Debug.Log($"[WeaponInstance] Executing spell at index {_currentIndex - 1} ({spell.name})");
+            context.RemainingSpells = _data.SpellSequence.Skip(_currentIndex).ToList();
+            context.ExecutedSpellIndex = _currentIndex - 1;
+            Debug.Log($"[WeaponInstance] RemainingSpells.Count = {context.RemainingSpells.Count}");
 
             // Appliquer les modificateurs uniquement sur ce sort
             context.PendingModifiers = _pendingModifiers;

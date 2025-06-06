@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bf4cedd994753d468d608acf9f6174d, type: 3}
-  m_Name: Fire Ball Spell
+  m_Script: {fileID: 11500000, guid: a8b19d0b52e83fd4999af028fbf77ad8, type: 3}
+  m_Name: FireBallOnHit
   m_EditorClassIdentifier: 
-  id: 001
+  id: 002
   category: 0
   canTriggerNext: 0
-  triggerNextOnImpact: 0
-  fireballPrefab: {fileID: 447778130735170593, guid: 526169221af51f24c8cd484c3c375e5a, type: 3}
+  triggerNextOnImpact: 1
+  fireballPrefab: {fileID: 5251775386939225838, guid: d902baecde66f9b4f921c736979bbe83, type: 3}
   speed: 10

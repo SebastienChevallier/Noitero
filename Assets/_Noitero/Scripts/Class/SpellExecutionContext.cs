@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class SpellExecutionContext
 {
-    public Transform Caster;
+    public Vector3 Caster;
     public Vector3 Direction;
     public List<GameObject> SpawnedProjectiles = new();
     public Dictionary<string, object> Variables = new();
-
+    public int ExecutedSpellIndex { get; set; }
     public List<SpellBase> PendingModifiers;
 
     public Vector3? ImpactPosition { get; set; } = null;
@@ -17,4 +17,18 @@ public class SpellExecutionContext
 
     public void SetVariable(string key, object value) => Variables[key] = value;
     public T GetVariable<T>(string key) => Variables.ContainsKey(key) ? (T)Variables[key] : default;
+
+    public List<SpellBase> NextSpellsAfter(ISpell spell)
+    {
+        return RemainingSpells;
+        /*string spellId = spell.Id;
+        int index = RemainingSpells.FindIndex(s => s.Id == spellId);
+
+        if (index >= 0 && index + 1 < RemainingSpells.Count)
+        {
+            return RemainingSpells.GetRange(index + 1, RemainingSpells.Count - (index + 1));
+        }
+
+        return new List<SpellBase>();*/
+    }
 }

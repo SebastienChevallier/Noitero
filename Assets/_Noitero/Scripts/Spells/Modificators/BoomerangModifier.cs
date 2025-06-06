@@ -13,7 +13,7 @@ public class BoomerangModifier : SpellBase
             if (proj == null) continue;
 
             var boomerang = proj.AddComponent<BoomerangProjectile>();
-            boomerang.Setup(context.Caster.position, returnDelay, returnSpeed);
+            boomerang.Setup(context.Caster, returnDelay, returnSpeed);
         }
     }
 }

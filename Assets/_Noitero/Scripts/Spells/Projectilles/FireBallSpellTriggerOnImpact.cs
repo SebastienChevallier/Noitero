@@ -8,7 +8,8 @@ public class FireBallSpellTriggerOnImpact : SpellBase
 
     public override void Execute(SpellExecutionContext context)
     {
-        var instance = Instantiate(fireballPrefab, context.Caster.position, Quaternion.LookRotation(context.Direction));
+        
+        var instance = Instantiate(fireballPrefab, context.Caster, Quaternion.LookRotation(context.Direction));
         var rb = instance.GetComponent<Rigidbody>();
 
         if (rb != null)
@@ -19,11 +20,17 @@ public class FireBallSpellTriggerOnImpact : SpellBase
         // Pr�paration du d�clenchement � l�impact
         if (TriggerNextOnImpact)
         {
-            var projectile = instance.GetComponent<FireballProjectile>();
-            if (projectile != null)
+            
+            if (instance.TryGetComponent<FireBallProjectile>(out FireBallProjectile projectile)) 
             {
-                projectile.Initialize(context);
+                Debug.Log(projectile.name);
+                if (projectile != null)
+                {
+                    projectile.Initialize(context, context.ExecutedSpellIndex);
+                }
             }
+            
+
         }
     }
 
