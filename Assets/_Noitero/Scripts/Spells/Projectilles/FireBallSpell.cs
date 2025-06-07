@@ -8,7 +8,8 @@ public class FireBallSpell : SpellBase
 
     public override void Execute(SpellExecutionContext context)
     {
-        var instance = GameObject.Instantiate(fireballPrefab, context.Caster, Quaternion.LookRotation(context.Direction));
+        Vector3 spawnPos = context.Caster + context.Direction.normalized * 0.5f;
+        var instance = GameObject.Instantiate(fireballPrefab, spawnPos, Quaternion.LookRotation(context.Direction));
         var rb = instance.GetComponent<Rigidbody>();
         if (rb != null)
         {

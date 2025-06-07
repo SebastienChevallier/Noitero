@@ -13,7 +13,7 @@ public class FireBallProjectile : MonoBehaviour
     {
         _context = context;
         _originIndex = originIndex;
-        _nextSpells = context.RemainingSpells.Skip(originIndex).ToList();
+        _nextSpells = context.RemainingSpells.ToList();
 
         Debug.Log($"[Projectile] Origin index: {originIndex}");
         Debug.Log($"[Projectile] RemainingSpells.Count = {context.RemainingSpells.Count}");
@@ -27,9 +27,21 @@ public class FireBallProjectile : MonoBehaviour
         _context.Caster = hitPos;
         _context.ImpactTriggered = true;
         
-        foreach (var spell in _nextSpells)
+        for (int i = 0; i < _nextSpells.Count; i++)
         {
+            SpellBase spell = _nextSpells[i];
+
+            // Update context so chained spells don't re-execute previous ones
+            _context.ExecutedSpellIndex = _originIndex + i + 1;
+            _context.RemainingSpells = _nextSpells.Skip(i + 1).ToList();
+
+            // keep weapon sequence in sync
+            _context.AdvanceIndexAction?.Invoke(_context.ExecutedSpellIndex + 1);
+
             spell.Execute(_context);
+
+            if (spell.TriggerNextOnImpact)
+                break; // next spells will be executed after impact of this one
         }
 
         
