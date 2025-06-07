@@ -44,6 +44,7 @@ public class WeaponInstance
                 BeginCooldown();
         };
 
+
         while (_currentIndex < _data.SpellSequence.Count)
         {
             SpellBase spell = _data.SpellSequence[_currentIndex];
@@ -70,6 +71,7 @@ public class WeaponInstance
             break;
         }
 
+
             BeginCooldown();
             yield break;
     private void BeginCooldown()
@@ -86,7 +88,9 @@ public class WeaponInstance
         _isOnCooldown = false;
         _cooldownCoroutine = null;
     }
+
             yield return new WaitForSeconds(_data.GlobalCooldown);
+            context.RemainingSpells = new List<SpellBase>(_data.SpellSequence);
             _currentIndex = 0;
             _isOnCooldown = false;
         }

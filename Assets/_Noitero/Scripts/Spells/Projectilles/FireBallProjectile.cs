@@ -38,6 +38,9 @@ public class FireBallProjectile : MonoBehaviour
             // keep weapon sequence in sync
             _context.AdvanceIndexAction?.Invoke(_context.ExecutedSpellIndex + 1);
 
+
+            Debug.Log($"[Projectile] Executing spell: {spell.name} at index {_context.ExecutedSpellIndex}");
+
             spell.Execute(_context);
 
             if (spell.TriggerNextOnImpact)
