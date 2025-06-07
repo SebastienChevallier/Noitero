@@ -9,7 +9,8 @@ public class FireBallSpellTriggerOnImpact : SpellBase
     public override void Execute(SpellExecutionContext context)
     {
         
-        var instance = Instantiate(fireballPrefab, context.Caster, Quaternion.LookRotation(context.Direction));
+        Vector3 spawnPos = context.Caster + context.Direction.normalized * 0.5f;
+        var instance = Instantiate(fireballPrefab, spawnPos, Quaternion.LookRotation(context.Direction));
         var rb = instance.GetComponent<Rigidbody>();
 
         if (rb != null)

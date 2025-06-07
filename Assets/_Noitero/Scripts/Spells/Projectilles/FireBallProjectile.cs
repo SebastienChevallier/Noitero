@@ -35,7 +35,14 @@ public class FireBallProjectile : MonoBehaviour
             _context.ExecutedSpellIndex = _originIndex + i + 1;
             _context.RemainingSpells = _nextSpells.Skip(i + 1).ToList();
 
+            // keep weapon sequence in sync
+            _context.AdvanceIndexAction?.Invoke(_context.ExecutedSpellIndex + 1);
+
+
             spell.Execute(_context);
+
+            if (spell.TriggerNextOnImpact)
+                break; // next spells will be executed after impact of this one
         }
 
         
