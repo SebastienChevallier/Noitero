@@ -11,6 +11,7 @@ public class WeaponInstance
 
     private int _currentIndex = 0;
     private bool _isOnCooldown = false;
+    private Coroutine _cooldownCoroutine = null;
     private List<SpellBase> _pendingModifiers = new();
 
     public WeaponInstance(WeaponData data, Transform caster, MonoBehaviour executorHost)
@@ -36,7 +37,12 @@ public class WeaponInstance
             Caster = _caster.position,
             Direction = direction
         };
-        context.AdvanceIndexAction = i => _currentIndex = i;
+        context.AdvanceIndexAction = i =>
+        {
+            _currentIndex = i;
+            if (_currentIndex >= _data.SpellSequence.Count)
+                BeginCooldown();
+        };
 
         while (_currentIndex < _data.SpellSequence.Count)
         {
@@ -64,10 +70,22 @@ public class WeaponInstance
             break;
         }
 
-        // Fin de la séquence ?
-        if (_currentIndex >= _data.SpellSequence.Count)
-        {
-            _isOnCooldown = true;
+            BeginCooldown();
+            yield break;
+    private void BeginCooldown()
+    {
+        if (_cooldownCoroutine == null)
+            _cooldownCoroutine = _executorHost.StartCoroutine(CooldownRoutine());
+    }
+
+    private IEnumerator CooldownRoutine()
+    {
+        _isOnCooldown = true;
+        yield return new WaitForSeconds(_data.GlobalCooldown);
+        _currentIndex = 0;
+        _isOnCooldown = false;
+        _cooldownCoroutine = null;
+    }
             yield return new WaitForSeconds(_data.GlobalCooldown);
             _currentIndex = 0;
             _isOnCooldown = false;
