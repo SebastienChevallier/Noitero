@@ -69,6 +69,7 @@ public class WeaponInstance
         {
             _isOnCooldown = true;
             yield return new WaitForSeconds(_data.GlobalCooldown);
+            context.RemainingSpells = new List<SpellBase>(_data.SpellSequence);
             _currentIndex = 0;
             _isOnCooldown = false;
         }
