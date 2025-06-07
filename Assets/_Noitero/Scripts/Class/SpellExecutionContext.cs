@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class SpellExecutionContext
@@ -9,6 +10,8 @@ public class SpellExecutionContext
     public Dictionary<string, object> Variables = new();
     public int ExecutedSpellIndex { get; set; }
     public List<SpellBase> PendingModifiers;
+
+    public Action<int> AdvanceIndexAction { get; set; }
 
     public Vector3? ImpactPosition { get; set; } = null;
     public bool ImpactTriggered { get; set; } = false;

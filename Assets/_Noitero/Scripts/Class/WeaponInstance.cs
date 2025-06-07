@@ -36,6 +36,7 @@ public class WeaponInstance
             Caster = _caster.position,
             Direction = direction
         };
+        context.AdvanceIndexAction = i => _currentIndex = i;
 
         while (_currentIndex < _data.SpellSequence.Count)
         {
@@ -63,7 +64,7 @@ public class WeaponInstance
             break;
         }
 
-        // Fin de la séquence ?
+        // Fin de la sÃ©quence ?
         if (_currentIndex >= _data.SpellSequence.Count)
         {
             _isOnCooldown = true;
