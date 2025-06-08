@@ -72,8 +72,10 @@ public class WeaponInstance
         }
 
 
-            BeginCooldown();
-            yield break;
+        BeginCooldown();
+        yield break;
+
+    }
     private void BeginCooldown()
     {
         if (_cooldownCoroutine == null)
@@ -87,12 +89,5 @@ public class WeaponInstance
         _currentIndex = 0;
         _isOnCooldown = false;
         _cooldownCoroutine = null;
-    }
-
-            yield return new WaitForSeconds(_data.GlobalCooldown);
-            context.RemainingSpells = new List<SpellBase>(_data.SpellSequence);
-            _currentIndex = 0;
-            _isOnCooldown = false;
-        }
-    }
+    }  
 }
