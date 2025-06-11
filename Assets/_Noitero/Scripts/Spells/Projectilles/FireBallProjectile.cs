@@ -18,6 +18,8 @@ public class FireBallProjectile : MonoBehaviour
         Debug.Log($"[Projectile] Origin index: {originIndex}");
         Debug.Log($"[Projectile] RemainingSpells.Count = {context.RemainingSpells.Count}");
         Debug.Log($"[Projectile] NextSpells.Count = {_nextSpells.Count}");
+
+        Destroy(gameObject, 5f);
     }
 
     private void OnCollisionEnter(Collision collision)
