@@ -7,6 +7,8 @@ public class PlayerWeaponController : MonoBehaviour
     private WeaponInstance weaponInstance;
     private Camera mainCamera;
 
+    public WeaponInstance WeaponInstance => weaponInstance;
+
     void Start()
     {
         weaponInstance = new WeaponInstance(weaponData, casterTransform, this);

@@ -8,6 +8,7 @@ public class WeaponInstance
     private readonly WeaponData _data;
     private readonly Transform _caster;
     private MonoBehaviour _executorHost;
+    private List<SpellBase> _spellSequence;
 
     private int _currentIndex = 0;
     private bool _isOnCooldown = false;
@@ -19,11 +20,25 @@ public class WeaponInstance
         _data = data;
         _caster = caster;
         _executorHost = executorHost;
+        _spellSequence = new List<SpellBase>(_data.SpellSequence);
+    }
+
+    public List<SpellBase> SpellSequence => _spellSequence;
+
+    public void MoveSpell(int oldIndex, int newIndex)
+    {
+        if (oldIndex < 0 || oldIndex >= _spellSequence.Count ||
+            newIndex < 0 || newIndex >= _spellSequence.Count)
+            return;
+
+        SpellBase item = _spellSequence[oldIndex];
+        _spellSequence.RemoveAt(oldIndex);
+        _spellSequence.Insert(newIndex, item);
     }
 
     public void TryCastNext(Vector3 direction)
     {
-        if (_isOnCooldown || _currentIndex >= _data.SpellSequence.Count)
+        if (_isOnCooldown || _currentIndex >= _spellSequence.Count)
             return;
 
         _executorHost.StartCoroutine(CastNextSpell(direction));
@@ -40,14 +55,14 @@ public class WeaponInstance
         context.AdvanceIndexAction = i =>
         {
             _currentIndex = i;
-            if (_currentIndex >= _data.SpellSequence.Count)
+            if (_currentIndex >= _spellSequence.Count)
                 BeginCooldown();
         };
 
 
-        while (_currentIndex < _data.SpellSequence.Count)
+        while (_currentIndex < _spellSequence.Count)
         {
-            SpellBase spell = _data.SpellSequence[_currentIndex];
+            SpellBase spell = _spellSequence[_currentIndex];
             _currentIndex++;
 
             if (spell.Category == SpellCategory.Modifier)
@@ -57,7 +72,7 @@ public class WeaponInstance
             }
 
             Debug.Log($"[WeaponInstance] Executing spell at index {_currentIndex - 1} ({spell.name})");
-            context.RemainingSpells = _data.SpellSequence.Skip(_currentIndex).ToList();
+            context.RemainingSpells = _spellSequence.Skip(_currentIndex).ToList();
             context.ExecutedSpellIndex = _currentIndex - 1;
             Debug.Log($"[WeaponInstance] RemainingSpells.Count = {context.RemainingSpells.Count}");
 
