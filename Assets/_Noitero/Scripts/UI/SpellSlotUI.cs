@@ -10,7 +10,9 @@ public class SpellSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     private CanvasGroup canvasGroup;
     private Transform parentAfterDrag;
     private GameObject placeholder;
+
     private bool isHorizontal = true;
+
     private SpellListUI listUI;
     private int index;
 
@@ -44,18 +46,21 @@ public class SpellSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
         transform.SetParent(parentAfterDrag.parent);
 
+
         // detect layout orientation (horizontal vs vertical)
         if (parentAfterDrag.childCount >= 2)
         {
             Vector3 diff = parentAfterDrag.GetChild(1).position - parentAfterDrag.GetChild(0).position;
             isHorizontal = Mathf.Abs(diff.x) > Mathf.Abs(diff.y);
         }
+
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         if (rectTransform != null)
             rectTransform.position = eventData.position;
+
 
         int targetIndex = parentAfterDrag.childCount;
         for (int i = 0; i < parentAfterDrag.childCount; i++)
@@ -80,6 +85,7 @@ public class SpellSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         }
 
         placeholder.transform.SetSiblingIndex(targetIndex);
+
     }
 
     public void OnEndDrag(PointerEventData eventData)
