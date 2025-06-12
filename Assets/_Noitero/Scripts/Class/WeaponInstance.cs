@@ -71,10 +71,10 @@ public class WeaponInstance
                 continue; // ne bloque pas le clic suivant
             }
 
-            Debug.Log($"[WeaponInstance] Executing spell at index {_currentIndex - 1} ({spell.name})");
+            //Debug.Log($"[WeaponInstance] Executing spell at index {_currentIndex - 1} ({spell.name})");
             context.RemainingSpells = _spellSequence.Skip(_currentIndex).ToList();
             context.ExecutedSpellIndex = _currentIndex - 1;
-            Debug.Log($"[WeaponInstance] RemainingSpells.Count = {context.RemainingSpells.Count}");
+            //Debug.Log($"[WeaponInstance] RemainingSpells.Count = {context.RemainingSpells.Count}");
 
             // Appliquer les modificateurs uniquement sur ce sort
             context.PendingModifiers = _pendingModifiers;

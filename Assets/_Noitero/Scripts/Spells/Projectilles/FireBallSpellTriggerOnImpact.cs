@@ -26,7 +26,7 @@ public class FireBallSpellTriggerOnImpact : SpellBase
             
             if (instance.TryGetComponent<FireBallProjectile>(out FireBallProjectile projectile)) 
             {
-                Debug.Log(projectile.name);
+                //Debug.Log(projectile.name);
                 if (projectile != null)
                 {
                     projectile.Initialize(context, context.ExecutedSpellIndex);

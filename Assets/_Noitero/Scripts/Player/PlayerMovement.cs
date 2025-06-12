@@ -18,11 +18,11 @@ public class PlayerMovement : MonoBehaviour
 
         if(_characterController == null)
         {
-            Debug.LogError("CharacterController is not assigned or found on the GameObject.");
+            //Debug.LogError("CharacterController is not assigned or found on the GameObject.");
             return;
         }
 
-        _characterController.Move(GetJoystickDirection() * Time.deltaTime * speed); // Adjust speed as needed
+        _characterController.Move(GetJoystickDirection() * Time.deltaTime * speed);
     }
 
     public Vector3 GetJoystickDirection()
