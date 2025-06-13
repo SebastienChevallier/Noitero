@@ -15,10 +15,6 @@ public class FireBallProjectile : MonoBehaviour
         _originIndex = originIndex;
         _nextSpells = context.RemainingSpells.ToList();
 
-        //Debug.Log($"[Projectile] Origin index: {originIndex}");
-        //Debug.Log($"[Projectile] RemainingSpells.Count = {context.RemainingSpells.Count}");
-        //Debug.Log($"[Projectile] NextSpells.Count = {_nextSpells.Count}");
-
         Destroy(gameObject, 5f);
     }
 
@@ -41,8 +37,6 @@ public class FireBallProjectile : MonoBehaviour
             _context.AdvanceIndexAction?.Invoke(_context.ExecutedSpellIndex + 1);
 
 
-            //Debug.Log($"[Projectile] Executing spell: {spell.name} at index {_context.ExecutedSpellIndex}");
-
             spell.Execute(_context);
 
             if (spell.TriggerNextOnImpact)
@@ -50,6 +44,13 @@ public class FireBallProjectile : MonoBehaviour
         }
 
         
+        var boomerang = GetComponent<BoomerangProjectile>();
+        if (boomerang != null)
+        {
+            boomerang.ForceReturn();
+            return;
+        }
+
         Destroy(gameObject);
-    }    
+    }
 }
