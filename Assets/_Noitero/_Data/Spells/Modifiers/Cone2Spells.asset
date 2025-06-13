@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Cone2Spells
   m_EditorClassIdentifier: 
   id: 
-  category: 1
+  category: 3
   canTriggerNext: 0
   triggerNextOnImpact: 0
   shots: 2
