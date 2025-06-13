@@ -44,6 +44,13 @@ public class FireBallProjectile : MonoBehaviour
         }
 
         
+        var boomerang = GetComponent<BoomerangProjectile>();
+        if (boomerang != null)
+        {
+            boomerang.ForceReturn();
+            return;
+        }
+
         Destroy(gameObject);
-    }    
+    }
 }

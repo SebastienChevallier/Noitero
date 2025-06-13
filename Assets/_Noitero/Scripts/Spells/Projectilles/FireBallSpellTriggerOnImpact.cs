@@ -18,6 +18,14 @@ public class FireBallSpellTriggerOnImpact : SpellBase
 
         context.SpawnedProjectiles.Add(instance);
 
+        if (context.PendingModifiers != null)
+        {
+            foreach (var mod in context.PendingModifiers)
+            {
+                mod.Execute(context);
+            }
+        }
+
         instance.AddComponent<TriggerHit>().Init(10);
 
         // Pr�paration du d�clenchement � l�impact

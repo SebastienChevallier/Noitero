@@ -11,14 +11,17 @@ public class ConeNextSpellsModifier : SpellBase
 
     public override void Execute(SpellExecutionContext context)
     {
-
         List<SpellBase> sequence = context.RemainingSpells;
         if (sequence == null || sequence.Count == 0)
             return;
 
-
         Vector3 baseDirection = context.Direction;
         int originIndex = context.ExecutedSpellIndex;
+
+        // Modifiers coming from earlier spells (e.g. Boomerang)
+        var initialMods = context.PendingModifiers != null
+            ? new List<SpellBase>(context.PendingModifiers)
+            : null;
 
         // Holds projectiles found and the modifiers preceding them
         var casts = new List<(SpellBase projectile, int index, List<SpellBase> mods, int consumed)>();
@@ -38,7 +41,17 @@ public class ConeNextSpellsModifier : SpellBase
 
             if (next.Category == SpellCategory.Projectile)
             {
-                casts.Add((next, originIndex + scan + 1, new List<SpellBase>(collectedMods), scan + 1));
+                var mods = new List<SpellBase>();
+                if (initialMods != null)
+                {
+                    mods.AddRange(initialMods);
+                    initialMods = null; // only apply once
+                }
+
+                mods.AddRange(collectedMods);
+
+                casts.Add((next, originIndex + scan + 1, mods, scan + 1));
+
                 collectedMods.Clear();
                 scan++;
                 continue;
@@ -56,9 +69,7 @@ public class ConeNextSpellsModifier : SpellBase
 
         for (int i = 0; i < casts.Count; i++)
         {
-
             var info = casts[i];
-
 
             float offset = -coneAngle / 2f + step * i;
             context.Direction = Quaternion.AngleAxis(offset, Vector3.up) * baseDirection;
@@ -66,7 +77,6 @@ public class ConeNextSpellsModifier : SpellBase
             context.ExecutedSpellIndex = info.index;
             context.RemainingSpells = sequence.Skip(info.consumed).ToList();
             context.PendingModifiers = info.mods;
-
             context.SpawnedProjectiles = new List<GameObject>();
 
             info.projectile.Execute(context);
@@ -78,6 +88,5 @@ public class ConeNextSpellsModifier : SpellBase
 
         context.SpawnedProjectiles = totalProjectiles;
         context.Direction = baseDirection;
-
     }
 }

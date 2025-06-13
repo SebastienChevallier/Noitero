@@ -24,6 +24,11 @@ public class BoomerangProjectile : MonoBehaviour
         }
     }
 
+    public void ForceReturn()
+    {
+        _returning = true;
+    }
+
     void FixedUpdate()
     {
         if (_rb == null) return;

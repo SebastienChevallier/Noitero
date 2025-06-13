@@ -34,7 +34,6 @@ public class WeaponInstance
     private void EnsureSequenceUpToDate()
     {
         var dataSeq = _data.SpellSequence;
-
         if (dataSeq.Count != _dataSnapshot.Count)
         {
             _spellSequence = new List<SpellBase>(dataSeq);
@@ -46,12 +45,10 @@ public class WeaponInstance
 
         for (int i = 0; i < dataSeq.Count; i++)
         {
-
             if (dataSeq[i] != _dataSnapshot[i])
             {
                 _spellSequence = new List<SpellBase>(dataSeq);
                 _dataSnapshot = new List<SpellBase>(dataSeq);
-
                 ResetSpellQueue();
                 break;
             }
@@ -80,6 +77,7 @@ public class WeaponInstance
     {
         _spellQueue = new Queue<SpellBase>(_spellSequence);
         _currentIndex = 0;
+        _pendingModifiers.Clear();
     }
 
     public void MoveSpell(int oldIndex, int newIndex)
@@ -172,7 +170,10 @@ public class WeaponInstance
 
         // When no more spells remain, start the global cooldown
         if (_spellQueue.Count == 0)
+        {
+            _pendingModifiers.Clear();
             BeginCooldown();
+        }
 
         yield break;
 
