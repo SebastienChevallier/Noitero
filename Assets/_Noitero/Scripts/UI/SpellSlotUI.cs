@@ -126,12 +126,40 @@ public class SpellSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         return targetIndex;
     }
 
+
+    private ISpellList FindTargetList(PointerEventData eventData)
+    {
+        // Try raycast first
+        if (eventData.pointerEnter != null)
+        {
+            var list = eventData.pointerEnter.GetComponentInParent<ISpellList>();
+            if (list != null)
+                return list;
+        }
+
+        // Fallback: check all lists by position
+        foreach (var mb in Object.FindObjectsOfType<MonoBehaviour>())
+        {
+            if (mb is ISpellList list)
+            {
+                var rt = (mb.transform as RectTransform);
+                if (rt != null && RectTransformUtility.RectangleContainsScreenPoint(rt, eventData.position, eventData.pressEventCamera))
+                    return list;
+            }
+        }
+
+        return null;
+    }
+
+
     public void OnEndDrag(PointerEventData eventData)
     {
         if (canvasGroup != null)
             canvasGroup.blocksRaycasts = true;
 
-        var targetList = eventData.pointerEnter ? eventData.pointerEnter.GetComponentInParent<ISpellList>() : null;
+
+        var targetList = FindTargetList(eventData);
+
         if (targetList == null)
             targetList = listUI;
 
