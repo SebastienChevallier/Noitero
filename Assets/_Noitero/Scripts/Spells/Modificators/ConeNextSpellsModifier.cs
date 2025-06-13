@@ -5,11 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Spells/Modifier/Cone Next Spells")]
 public class ConeNextSpellsModifier : SpellBase
 {
+
     [SerializeField] private int shots = 3;
     [SerializeField] private float coneAngle = 30f;
 
     public override void Execute(SpellExecutionContext context)
     {
+
         int castCount = Mathf.Min(shots, context.RemainingSpells.Count);
         if (castCount <= 0)
             return;
@@ -37,6 +39,8 @@ public class ConeNextSpellsModifier : SpellBase
         }
 
         context.SpawnedProjectiles = totalProjectiles;
+
         context.Direction = baseDir;
+
     }
 }
