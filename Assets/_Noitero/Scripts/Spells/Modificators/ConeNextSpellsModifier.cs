@@ -13,6 +13,7 @@ public class ConeNextSpellsModifier : SpellBase
     {
 
         int castCount = Mathf.Min(shots, context.RemainingSpells.Count);
+        Debug.Log(castCount);
         if (castCount <= 0)
             return;
 
