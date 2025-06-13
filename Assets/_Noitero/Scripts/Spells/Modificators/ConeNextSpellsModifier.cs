@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Spells/Modifier/Cone Next Spells")]
+[CreateAssetMenu(menuName = "Spells/Utility/Cone Next Spells")]
 public class ConeNextSpellsModifier : SpellBase
 {
 
@@ -12,33 +12,68 @@ public class ConeNextSpellsModifier : SpellBase
     public override void Execute(SpellExecutionContext context)
     {
 
-        List<SpellBase> remaining = context.RemainingSpells;
-        int castCount = Mathf.Min(shots, remaining.Count);
-        if (castCount <= 0)
+        List<SpellBase> sequence = context.RemainingSpells;
+        if (sequence == null || sequence.Count == 0)
             return;
 
-        float step = (castCount > 1) ? coneAngle / (castCount - 1) : 0f;
+
         Vector3 baseDirection = context.Direction;
         int originIndex = context.ExecutedSpellIndex;
 
+        // Holds projectiles found and the modifiers preceding them
+        var casts = new List<(SpellBase projectile, int index, List<SpellBase> mods, int consumed)>();
+        var collectedMods = new List<SpellBase>();
+
+        int scan = 0;
+        while (scan < sequence.Count && casts.Count < shots)
+        {
+            SpellBase next = sequence[scan];
+
+            if (next.Category == SpellCategory.Modifier)
+            {
+                collectedMods.Add(next);
+                scan++;
+                continue;
+            }
+
+            if (next.Category == SpellCategory.Projectile)
+            {
+                casts.Add((next, originIndex + scan + 1, new List<SpellBase>(collectedMods), scan + 1));
+                collectedMods.Clear();
+                scan++;
+                continue;
+            }
+
+            // Stop if a non compatible spell is encountered
+            break;
+        }
+
+        if (casts.Count == 0)
+            return;
+
+        float step = (casts.Count > 1) ? coneAngle / (casts.Count - 1) : 0f;
         List<GameObject> totalProjectiles = new();
 
-        for (int i = 0; i < castCount; i++)
+        for (int i = 0; i < casts.Count; i++)
         {
-            SpellBase spell = remaining[0];
+
+            var info = casts[i];
+
 
             float offset = -coneAngle / 2f + step * i;
             context.Direction = Quaternion.AngleAxis(offset, Vector3.up) * baseDirection;
 
-            context.ExecutedSpellIndex = originIndex + i + 1;
-            remaining = remaining.Skip(1).ToList();
-            context.RemainingSpells = remaining;
+            context.ExecutedSpellIndex = info.index;
+            context.RemainingSpells = sequence.Skip(info.consumed).ToList();
+            context.PendingModifiers = info.mods;
+
             context.SpawnedProjectiles = new List<GameObject>();
 
-            spell.Execute(context);
+            info.projectile.Execute(context);
 
             totalProjectiles.AddRange(context.SpawnedProjectiles);
-            context.AdvanceIndexAction?.Invoke(context.ExecutedSpellIndex + 1);
+            context.PendingModifiers = null;
+            context.AdvanceIndexAction?.Invoke(info.index + 1);
         }
 
         context.SpawnedProjectiles = totalProjectiles;
