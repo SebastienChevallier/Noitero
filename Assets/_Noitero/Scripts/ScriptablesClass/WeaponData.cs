@@ -28,4 +28,18 @@ public class WeaponData : ScriptableObject
         spellSequence.RemoveAt(oldIndex);
         spellSequence.Insert(newIndex, item);
     }
+
+    public void RemoveSpellAt(int index)
+    {
+        if (index < 0 || index >= spellSequence.Count)
+            return;
+        spellSequence.RemoveAt(index);
+    }
+
+    public void InsertSpell(int index, SpellBase spell)
+    {
+        if (index < 0 || index > spellSequence.Count)
+            index = spellSequence.Count;
+        spellSequence.Insert(index, spell);
+    }
 }

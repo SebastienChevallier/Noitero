@@ -521,6 +521,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &406456126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 406456122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2794031805df47b2b0e1f3a953f8e9e9, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  content: {fileID: 406456123}
+  spellSlotPrefab: {fileID: 4111130518046262368, guid: 2e073cae684843643846d7603ff8af2a, type: 3}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
