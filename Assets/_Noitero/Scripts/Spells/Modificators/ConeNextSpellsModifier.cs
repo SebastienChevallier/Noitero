@@ -11,9 +11,11 @@ public class ConeNextSpellsModifier : SpellBase
 
     public override void Execute(SpellExecutionContext context)
     {
+
         List<SpellBase> sequence = context.RemainingSpells;
         if (sequence == null || sequence.Count == 0)
             return;
+
 
         Vector3 baseDirection = context.Direction;
         int originIndex = context.ExecutedSpellIndex;
@@ -54,7 +56,9 @@ public class ConeNextSpellsModifier : SpellBase
 
         for (int i = 0; i < casts.Count; i++)
         {
+
             var info = casts[i];
+
 
             float offset = -coneAngle / 2f + step * i;
             context.Direction = Quaternion.AngleAxis(offset, Vector3.up) * baseDirection;
@@ -62,6 +66,7 @@ public class ConeNextSpellsModifier : SpellBase
             context.ExecutedSpellIndex = info.index;
             context.RemainingSpells = sequence.Skip(info.consumed).ToList();
             context.PendingModifiers = info.mods;
+
             context.SpawnedProjectiles = new List<GameObject>();
 
             info.projectile.Execute(context);
@@ -73,5 +78,6 @@ public class ConeNextSpellsModifier : SpellBase
 
         context.SpawnedProjectiles = totalProjectiles;
         context.Direction = baseDirection;
+
     }
 }

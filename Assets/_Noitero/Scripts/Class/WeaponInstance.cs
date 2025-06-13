@@ -34,20 +34,24 @@ public class WeaponInstance
     private void EnsureSequenceUpToDate()
     {
         var dataSeq = _data.SpellSequence;
+
         if (dataSeq.Count != _dataSnapshot.Count)
         {
             _spellSequence = new List<SpellBase>(dataSeq);
             _dataSnapshot = new List<SpellBase>(dataSeq);
+
             ResetSpellQueue();
             return;
         }
 
         for (int i = 0; i < dataSeq.Count; i++)
         {
+
             if (dataSeq[i] != _dataSnapshot[i])
             {
                 _spellSequence = new List<SpellBase>(dataSeq);
                 _dataSnapshot = new List<SpellBase>(dataSeq);
+
                 ResetSpellQueue();
                 break;
             }
