@@ -12,25 +12,27 @@ public class ConeNextSpellsModifier : SpellBase
     public override void Execute(SpellExecutionContext context)
     {
 
-        int castCount = Mathf.Min(shots, context.RemainingSpells.Count);
-        Debug.Log(castCount);
+        List<SpellBase> remaining = context.RemainingSpells;
+        int castCount = Mathf.Min(shots, remaining.Count);
         if (castCount <= 0)
             return;
 
         float step = (castCount > 1) ? coneAngle / (castCount - 1) : 0f;
-        Vector3 baseDir = context.Direction;
+        Vector3 baseDirection = context.Direction;
         int originIndex = context.ExecutedSpellIndex;
 
         List<GameObject> totalProjectiles = new();
 
         for (int i = 0; i < castCount; i++)
         {
-            SpellBase spell = context.RemainingSpells[0];
+            SpellBase spell = remaining[0];
 
             float offset = -coneAngle / 2f + step * i;
-            context.Direction = Quaternion.AngleAxis(offset, Vector3.up) * baseDir;
+            context.Direction = Quaternion.AngleAxis(offset, Vector3.up) * baseDirection;
+
             context.ExecutedSpellIndex = originIndex + i + 1;
-            context.RemainingSpells = context.RemainingSpells.Skip(1).ToList();
+            remaining = remaining.Skip(1).ToList();
+            context.RemainingSpells = remaining;
             context.SpawnedProjectiles = new List<GameObject>();
 
             spell.Execute(context);
@@ -40,8 +42,7 @@ public class ConeNextSpellsModifier : SpellBase
         }
 
         context.SpawnedProjectiles = totalProjectiles;
-
-        context.Direction = baseDir;
+        context.Direction = baseDirection;
 
     }
 }
