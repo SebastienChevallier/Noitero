@@ -126,6 +126,7 @@ public class SpellSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         return targetIndex;
     }
 
+
     private ISpellList FindTargetList(PointerEventData eventData)
     {
         // Try raycast first
@@ -150,12 +151,15 @@ public class SpellSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         return null;
     }
 
+
     public void OnEndDrag(PointerEventData eventData)
     {
         if (canvasGroup != null)
             canvasGroup.blocksRaycasts = true;
 
+
         var targetList = FindTargetList(eventData);
+
         if (targetList == null)
             targetList = listUI;
 
