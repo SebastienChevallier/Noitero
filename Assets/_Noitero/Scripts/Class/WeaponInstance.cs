@@ -14,6 +14,9 @@ public class WeaponInstance
     // Queue used at runtime to execute spells
     private Queue<SpellBase> _spellQueue;
 
+    // Snapshot of the data asset sequence to detect runtime changes
+    private List<SpellBase> _dataSnapshot;
+
     private int _currentIndex = 0;       // index of the spell being executed
     private bool _isOnCooldown = false;  // global cooldown flag
     private bool _spellOnCooldown = false; // delay between individual casts
@@ -31,18 +34,24 @@ public class WeaponInstance
     private void EnsureSequenceUpToDate()
     {
         var dataSeq = _data.SpellSequence;
-        if (dataSeq.Count != _spellSequence.Count)
+
+        if (dataSeq.Count != _dataSnapshot.Count)
         {
             _spellSequence = new List<SpellBase>(dataSeq);
+            _dataSnapshot = new List<SpellBase>(dataSeq);
+
             ResetSpellQueue();
             return;
         }
 
         for (int i = 0; i < dataSeq.Count; i++)
         {
-            if (dataSeq[i] != _spellSequence[i])
+
+            if (dataSeq[i] != _dataSnapshot[i])
             {
                 _spellSequence = new List<SpellBase>(dataSeq);
+                _dataSnapshot = new List<SpellBase>(dataSeq);
+
                 ResetSpellQueue();
                 break;
             }
@@ -55,6 +64,7 @@ public class WeaponInstance
         _caster = caster;
         _executorHost = executorHost;
         _spellSequence = new List<SpellBase>(_data.SpellSequence);
+        _dataSnapshot = new List<SpellBase>(_data.SpellSequence);
 
         ResetSpellQueue();
     }
@@ -84,6 +94,9 @@ public class WeaponInstance
 
         // Rebuild queue so the runtime order matches the UI order
         ResetSpellQueue();
+
+        // Update snapshot so EnsureSequenceUpToDate doesn't revert the change
+        _dataSnapshot = new List<SpellBase>(_spellSequence);
     }
 
     /// <summary>
