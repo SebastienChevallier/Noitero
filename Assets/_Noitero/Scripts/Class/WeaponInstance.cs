@@ -92,6 +92,9 @@ public class WeaponInstance
         _spellSequence.RemoveAt(oldIndex);
         _spellSequence.Insert(newIndex, item);
 
+        // Keep the underlying data asset in sync
+        _data.MoveSpell(oldIndex, newIndex);
+
         // Rebuild queue so the runtime order matches the UI order
         ResetSpellQueue();
 

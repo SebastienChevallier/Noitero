@@ -13,4 +13,19 @@ public class WeaponData : ScriptableObject
     public string WeaponId => weaponId;
     public IReadOnlyList<SpellBase> SpellSequence => spellSequence;
     public float DelayBetweenSpells => delayBetweenSpells;
+
+    /// <summary>
+    /// Reorders a spell inside the serialized sequence.
+    /// This allows runtime UIs to alter the base list.
+    /// </summary>
+    public void MoveSpell(int oldIndex, int newIndex)
+    {
+        if (oldIndex < 0 || oldIndex >= spellSequence.Count ||
+            newIndex < 0 || newIndex >= spellSequence.Count)
+            return;
+
+        SpellBase item = spellSequence[oldIndex];
+        spellSequence.RemoveAt(oldIndex);
+        spellSequence.Insert(newIndex, item);
+    }
 }
