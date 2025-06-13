@@ -16,13 +16,15 @@ public class SpellSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
     private bool isHorizontal = true;
 
-    private SpellListUI listUI;
+    private ISpellList listUI;
+    private SpellBase spell;
     private int index;
 
-    public void Setup(SpellListUI list, SpellBase spell, int index)
+    public void Setup(ISpellList list, SpellBase spell, int index)
     {
         listUI = list;
         this.index = index;
+        this.spell = spell;
         if (label != null)
             label.text = spell.name;
 
@@ -98,16 +100,55 @@ public class SpellSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
     }
 
+    private int GetTargetIndex(Transform parent, Vector3 position)
+    {
+        int targetIndex = parent.childCount;
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            var child = parent.GetChild(i);
+            if (isHorizontal)
+            {
+                if (position.x < child.position.x)
+                {
+                    targetIndex = i;
+                    break;
+                }
+            }
+            else
+            {
+                if (position.y > child.position.y)
+                {
+                    targetIndex = i;
+                    break;
+                }
+            }
+        }
+        return targetIndex;
+    }
+
     public void OnEndDrag(PointerEventData eventData)
     {
         if (canvasGroup != null)
             canvasGroup.blocksRaycasts = true;
 
-        transform.SetParent(parentAfterDrag);
-        int newIndex = placeholder.transform.GetSiblingIndex();
-        transform.SetSiblingIndex(newIndex);
+        var targetList = eventData.pointerEnter ? eventData.pointerEnter.GetComponentInParent<ISpellList>() : null;
+        if (targetList == null)
+            targetList = listUI;
 
-        listUI.OnItemMoved(index, newIndex);
+        if (targetList == listUI)
+        {
+            transform.SetParent(parentAfterDrag);
+            int newIndex = placeholder.transform.GetSiblingIndex();
+            transform.SetSiblingIndex(newIndex);
+            listUI.OnItemMoved(index, newIndex);
+        }
+        else
+        {
+            int newIndex = GetTargetIndex(targetList.Content, eventData.position);
+            listUI.RemoveSpellAt(index);
+            targetList.InsertSpellAt(spell, newIndex);
+            Destroy(gameObject);
+        }
 
         Destroy(placeholder);
     }
