@@ -4,10 +4,7 @@ public class TriggerHit : MonoBehaviour
 {
     private int _damage;
 
-    public void MultiplyDamage(float factor)
-    {
-        _damage = Mathf.RoundToInt(_damage * factor);
-    }
+
     public void Init(int dmg)
     {
         _damage = dmg;

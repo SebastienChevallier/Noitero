@@ -13,7 +13,8 @@ public class ZigZagProjectile : MonoBehaviour
 
     public void Init(Vector3 direction, float speed, float amplitude, float frequency)
     {
-        _direction = direction.normalized;
+        _direction = new Vector3(direction.x, 0f, direction.z).normalized;
+
         _speed = speed;
         _amplitude = amplitude;
         _frequency = frequency;

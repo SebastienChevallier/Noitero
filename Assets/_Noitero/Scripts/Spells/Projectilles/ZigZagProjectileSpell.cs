@@ -10,11 +10,14 @@ public class ZigZagProjectileSpell : SpellBase
 
     public override void Execute(SpellExecutionContext context)
     {
-        Vector3 spawnPos = context.Caster + context.Direction.normalized * 0.5f;
-        var instance = Instantiate(projectilePrefab, spawnPos, Quaternion.LookRotation(context.Direction));
+
+        Vector3 dir = new Vector3(context.Direction.x, 0f, context.Direction.z).normalized;
+        Vector3 spawnPos = context.Caster + dir * 0.5f;
+        var instance = Instantiate(projectilePrefab, spawnPos, Quaternion.LookRotation(dir));
 
         var zigzag = instance.AddComponent<ZigZagProjectile>();
-        zigzag.Init(context.Direction, speed, amplitude, frequency);
+        zigzag.Init(dir, speed, amplitude, frequency);
+
 
         instance.AddComponent<TriggerHit>().Init(10);
         context.SpawnedProjectiles.Add(instance);
