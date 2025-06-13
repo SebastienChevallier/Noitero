@@ -16,7 +16,9 @@ public class WeaponInstance
 
     private int _currentIndex = 0;       // index of the spell being executed
     private bool _isOnCooldown = false;  // global cooldown flag
+    private bool _spellOnCooldown = false; // delay between individual casts
     private Coroutine _cooldownCoroutine;
+    private Coroutine _spellCooldownCoroutine;
 
     // Modifiers collected before the next non-modifier spell is cast
     private List<SpellBase> _pendingModifiers = new();
@@ -64,7 +66,7 @@ public class WeaponInstance
     /// </summary>
     public void TryCastNext(Vector3 direction)
     {
-        if (_isOnCooldown)
+        if (_isOnCooldown || _spellOnCooldown)
             return;
 
         if (_spellQueue == null || _spellQueue.Count == 0)
@@ -86,7 +88,12 @@ public class WeaponInstance
         };
         context.AdvanceIndexAction = i =>
         {
+            int steps = i - _currentIndex;
+            for (int s = 0; s < steps && _spellQueue.Count > 0; s++)
+                _spellQueue.Dequeue();
+
             _currentIndex = i;
+
             if (_currentIndex >= _spellSequence.Count)
                 BeginCooldown();
         };
@@ -115,7 +122,7 @@ public class WeaponInstance
             _pendingModifiers.Clear();
 
             // Only one main spell per click
-            _executorHost.StartCoroutine(SpellsCoolDown());
+            BeginSpellCooldown();
             break;
         }
 
@@ -148,12 +155,19 @@ public class WeaponInstance
     }
 
     /// <summary>
-    /// Waits for the global cooldown then resets the spell queue.
+    /// Handles the delay between individual spell casts.
     /// </summary>
-    private IEnumerator SpellsCoolDown()
+    private void BeginSpellCooldown()
     {
-        
-        yield return new WaitForSeconds(_data.DelayBetweenSpells);        
-        
+        if (_spellCooldownCoroutine == null)
+            _spellCooldownCoroutine = _executorHost.StartCoroutine(SpellCooldownRoutine());
+    }
+
+    private IEnumerator SpellCooldownRoutine()
+    {
+        _spellOnCooldown = true;
+        yield return new WaitForSeconds(_data.DelayBetweenSpells);
+        _spellOnCooldown = false;
+        _spellCooldownCoroutine = null;
     }
 }
