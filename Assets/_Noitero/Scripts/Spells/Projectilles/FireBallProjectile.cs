@@ -43,14 +43,6 @@ public class FireBallProjectile : MonoBehaviour
                 break; // next spells will be executed after impact of this one
         }
 
-        
-        var boomerang = GetComponent<BoomerangProjectile>();
-        if (boomerang != null)
-        {
-            boomerang.ForceReturn();
-            return;
-        }
-
         Destroy(gameObject);
     }
 }

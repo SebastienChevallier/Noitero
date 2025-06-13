@@ -14,6 +14,7 @@ public class TriggerHit : MonoBehaviour
         if (other.gameObject.TryGetComponent<IHealth>(out IHealth health))
         {
             health.Damage(_damage);
+            
         }
     }
 }
