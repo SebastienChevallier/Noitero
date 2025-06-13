@@ -100,6 +100,26 @@ public class WeaponInstance
         _dataSnapshot = new List<SpellBase>(_spellSequence);
     }
 
+    public void RemoveSpellAt(int index)
+    {
+        if (index < 0 || index >= _spellSequence.Count)
+            return;
+        _spellSequence.RemoveAt(index);
+        _data.RemoveSpellAt(index);
+        ResetSpellQueue();
+        _dataSnapshot = new List<SpellBase>(_spellSequence);
+    }
+
+    public void InsertSpell(int index, SpellBase spell)
+    {
+        if (index < 0 || index > _spellSequence.Count)
+            index = _spellSequence.Count;
+        _spellSequence.Insert(index, spell);
+        _data.InsertSpell(index, spell);
+        ResetSpellQueue();
+        _dataSnapshot = new List<SpellBase>(_spellSequence);
+    }
+
     /// <summary>
     /// Attempts to cast the next spell in the queue.
     /// If the queue is empty it will be rebuilt from the sequence.
