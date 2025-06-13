@@ -10,7 +10,7 @@ public class ConeNextSpellsModifier : SpellBase
 
     public override void Execute(SpellExecutionContext context)
     {
-        int castCount = Mathf.Min(shots, context.RemainingSpells.Count);
+        int castCount = Mathf.Min(1, shots);
         if (castCount <= 0)
             return;
 
