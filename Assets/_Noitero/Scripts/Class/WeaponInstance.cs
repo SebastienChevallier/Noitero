@@ -115,6 +115,7 @@ public class WeaponInstance
             _pendingModifiers.Clear();
 
             // Only one main spell per click
+            _executorHost.StartCoroutine(SpellsCoolDown());
             break;
         }
 
@@ -144,5 +145,15 @@ public class WeaponInstance
         ResetSpellQueue();
         _isOnCooldown = false;
         _cooldownCoroutine = null;
+    }
+
+    /// <summary>
+    /// Waits for the global cooldown then resets the spell queue.
+    /// </summary>
+    private IEnumerator SpellsCoolDown()
+    {
+        
+        yield return new WaitForSeconds(_data.DelayBetweenSpells);        
+        
     }
 }
