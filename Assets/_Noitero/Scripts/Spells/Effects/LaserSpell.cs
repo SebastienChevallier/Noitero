@@ -9,6 +9,7 @@ public class LaserSpell : SpellBase
     public override void Execute(SpellExecutionContext context)
     {
         Vector3 start = context.Caster;
+
         Vector3 dir = new Vector3(context.Direction.x, 0f, context.Direction.z).normalized;
 
         if (Physics.Raycast(start, dir, out RaycastHit hit, length))

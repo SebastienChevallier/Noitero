@@ -4,6 +4,7 @@ public class TriggerHit : MonoBehaviour
 {
     private int _damage;
 
+
     public void Init(int dmg)
     {
         _damage = dmg;

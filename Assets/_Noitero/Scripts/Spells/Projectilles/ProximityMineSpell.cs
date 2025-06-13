@@ -9,6 +9,7 @@ public class ProximityMineSpell : SpellBase
     {
         Vector3 dir = new Vector3(context.Direction.x, 0f, context.Direction.z).normalized;
         Vector3 spawnPos = context.Caster + dir * 0.5f;
+
         var instance = Instantiate(minePrefab, spawnPos, Quaternion.identity);
         context.SpawnedProjectiles.Add(instance);
 

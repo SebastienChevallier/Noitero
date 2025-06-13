@@ -1,10 +1,13 @@
 using UnityEngine;
 
+
 [CreateAssetMenu(menuName = "Spells/Projectile/Curved Projectile")]
+
 public class ArcProjectileSpell : SpellBase
 {
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float speed = 10f;
+
     [SerializeField] private float angularSpeed = 45f;
 
     public override void Execute(SpellExecutionContext context)
@@ -17,6 +20,7 @@ public class ArcProjectileSpell : SpellBase
         {
             var curved = instance.AddComponent<CurvedProjectile>();
             curved.Init(dir, speed, angularSpeed);
+
         }
 
         instance.AddComponent<TriggerHit>().Init(10);
