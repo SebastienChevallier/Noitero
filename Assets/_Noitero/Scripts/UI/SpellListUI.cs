@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class SpellListUI : MonoBehaviour
+public class SpellListUI : MonoBehaviour, ISpellList
 {
     [SerializeField] private PlayerWeaponController weaponController;
     [SerializeField] private Transform content;
@@ -62,15 +62,30 @@ public class SpellListUI : MonoBehaviour
         var instance = weaponController.WeaponInstance;
         instance.MoveSpell(oldIndex, newIndex);
 
-        var slot = slots[oldIndex];
-        slots.RemoveAt(oldIndex);
-        slots.Insert(newIndex, slot);
-
-        for (int i = 0; i < slots.Count; i++)
-        {
-            slots[i].UpdateIndex(i);
-        }
-
         sequenceSnapshot = instance.SpellSequence.ToList();
+        BuildSlots(instance.SpellSequence);
+    }
+
+    public Transform Content => content;
+
+    public SpellBase RemoveSpellAt(int index)
+    {
+        var instance = weaponController.WeaponInstance;
+        if (index < 0 || index >= instance.SpellSequence.Count)
+            return null;
+
+        var spell = instance.SpellSequence[index];
+        instance.RemoveSpellAt(index);
+        sequenceSnapshot = instance.SpellSequence.ToList();
+        BuildSlots(instance.SpellSequence);
+        return spell;
+    }
+
+    public void InsertSpellAt(SpellBase spell, int index)
+    {
+        var instance = weaponController.WeaponInstance;
+        instance.InsertSpell(index, spell);
+        sequenceSnapshot = instance.SpellSequence.ToList();
+        BuildSlots(instance.SpellSequence);
     }
 }
