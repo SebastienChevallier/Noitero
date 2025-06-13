@@ -3,31 +3,20 @@ using UnityEngine;
 public class PlayerShoot : MonoBehaviour
 {
     public PlayerWeaponController WeaponController;
-    private PlayerMovement PlayerMovement;
+    private PlayerMovement _movement;
 
-    private void Start()
-    {
-        PlayerMovement = GetComponent<PlayerMovement>();
-    }
+    private void Start() => _movement = GetComponent<PlayerMovement>();
 
     private void OnTriggerStay(Collider other)
     {
-        if (PlayerMovement != null)
-        {            
-            if (PlayerMovement.GetJoystickDirection().magnitude > 0)
-                return;
-        }
+        if (_movement != null && _movement.GetJoystickDirection().magnitude > 0)
+            return;
 
-        if(other.gameObject.TryGetComponent<IHealth>(out IHealth health))
+        if (other.TryGetComponent<IHealth>(out IHealth _)
+            && other.gameObject != gameObject)
         {
-            
-            if (other.gameObject != this) 
-            {
-                Vector3 direction = Vector3.zero;
-                direction =  other.transform.position - transform.position;
-
-                WeaponController.Shoot(direction);
-            }
+            Vector3 direction = other.transform.position - transform.position;
+            WeaponController.Shoot(direction);
         }
     }
 

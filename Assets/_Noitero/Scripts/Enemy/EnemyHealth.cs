@@ -9,11 +9,7 @@ public class EnemyHealth : MonoBehaviour, IHealth
     public void Damage(int damage)
     {
         Health -= damage;
-
-        if(Health < 0)
-        {
-            Health = MaxHealth; //Testing
-            //Death
-        }
+        if (Health < 0)
+            Health = MaxHealth; // TODO: death handling
     }
 }

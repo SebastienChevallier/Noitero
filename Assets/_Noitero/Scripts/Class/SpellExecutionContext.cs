@@ -2,6 +2,10 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Context object passed to spells during execution.
+/// Holds shared variables and the remaining sequence.
+/// </summary>
 public class SpellExecutionContext
 {
     public Vector3 Caster;
@@ -20,18 +24,4 @@ public class SpellExecutionContext
 
     public void SetVariable(string key, object value) => Variables[key] = value;
     public T GetVariable<T>(string key) => Variables.ContainsKey(key) ? (T)Variables[key] : default;
-
-    public List<SpellBase> NextSpellsAfter(ISpell spell)
-    {
-        return RemainingSpells;
-        /*string spellId = spell.Id;
-        int index = RemainingSpells.FindIndex(s => s.Id == spellId);
-
-        if (index >= 0 && index + 1 < RemainingSpells.Count)
-        {
-            return RemainingSpells.GetRange(index + 1, RemainingSpells.Count - (index + 1));
-        }
-
-        return new List<SpellBase>();*/
-    }
 }

@@ -8,11 +8,17 @@ public class WeaponInstance
     private readonly WeaponData _data;
     private readonly Transform _caster;
     private MonoBehaviour _executorHost;
+    // Ordered list exposed to the UI so players can reorder spells
     private List<SpellBase> _spellSequence;
 
-    private int _currentIndex = 0;
-    private bool _isOnCooldown = false;
-    private Coroutine _cooldownCoroutine = null;
+    // Queue used at runtime to execute spells
+    private Queue<SpellBase> _spellQueue;
+
+    private int _currentIndex = 0;       // index of the spell being executed
+    private bool _isOnCooldown = false;  // global cooldown flag
+    private Coroutine _cooldownCoroutine;
+
+    // Modifiers collected before the next non-modifier spell is cast
     private List<SpellBase> _pendingModifiers = new();
 
     public WeaponInstance(WeaponData data, Transform caster, MonoBehaviour executorHost)
@@ -21,9 +27,22 @@ public class WeaponInstance
         _caster = caster;
         _executorHost = executorHost;
         _spellSequence = new List<SpellBase>(_data.SpellSequence);
+
+        ResetSpellQueue();
     }
 
     public List<SpellBase> SpellSequence => _spellSequence;
+
+    /// <summary>
+    /// Rebuilds the runtime queue from the current spell sequence.
+    /// Also resets the current execution index so the sequence
+    /// starts from the beginning.
+    /// </summary>
+    private void ResetSpellQueue()
+    {
+        _spellQueue = new Queue<SpellBase>(_spellSequence);
+        _currentIndex = 0;
+    }
 
     public void MoveSpell(int oldIndex, int newIndex)
     {
@@ -34,19 +53,32 @@ public class WeaponInstance
         SpellBase item = _spellSequence[oldIndex];
         _spellSequence.RemoveAt(oldIndex);
         _spellSequence.Insert(newIndex, item);
+
+        // Rebuild queue so the runtime order matches the UI order
+        ResetSpellQueue();
     }
 
+    /// <summary>
+    /// Attempts to cast the next spell in the queue.
+    /// If the queue is empty it will be rebuilt from the sequence.
+    /// </summary>
     public void TryCastNext(Vector3 direction)
     {
-        if (_isOnCooldown || _currentIndex >= _spellSequence.Count)
+        if (_isOnCooldown)
             return;
+
+        if (_spellQueue == null || _spellQueue.Count == 0)
+            ResetSpellQueue();
 
         _executorHost.StartCoroutine(CastNextSpell(direction));
     }
 
+    /// <summary>
+    /// Handles the actual execution of a spell with all modifiers.
+    /// Uses a coroutine so delays between spells can be easily added later.
+    /// </summary>
     private IEnumerator CastNextSpell(Vector3 direction)
     {
-
         SpellExecutionContext context = new()
         {
             Caster = _caster.position,
@@ -60,9 +92,10 @@ public class WeaponInstance
         };
 
 
-        while (_currentIndex < _spellSequence.Count)
+        while (_spellQueue.Count > 0)
         {
-            SpellBase spell = _spellSequence[_currentIndex];
+            // Dequeue the next spell to process
+            SpellBase spell = _spellQueue.Dequeue();
             _currentIndex++;
 
             if (spell.Category == SpellCategory.Modifier)
@@ -71,38 +104,45 @@ public class WeaponInstance
                 continue; // ne bloque pas le clic suivant
             }
 
-            //Debug.Log($"[WeaponInstance] Executing spell at index {_currentIndex - 1} ({spell.name})");
-            context.RemainingSpells = _spellSequence.Skip(_currentIndex).ToList();
+            // Remaining spells are those left in the queue
+            context.RemainingSpells = _spellQueue.ToList();
             context.ExecutedSpellIndex = _currentIndex - 1;
-            //Debug.Log($"[WeaponInstance] RemainingSpells.Count = {context.RemainingSpells.Count}");
 
-            // Appliquer les modificateurs uniquement sur ce sort
+            // Apply collected modifiers only to this spell
             context.PendingModifiers = _pendingModifiers;
             spell.Execute(context);
             context.PendingModifiers = null;
             _pendingModifiers.Clear();
 
-            // Pause entre sorts "principaux"
+            // Only one main spell per click
             break;
         }
 
+        // When no more spells remain, start the global cooldown
+        if (_spellQueue.Count == 0)
+            BeginCooldown();
 
-        BeginCooldown();
         yield break;
 
     }
+    /// <summary>
+    /// Launches the global cooldown coroutine if not already running.
+    /// </summary>
     private void BeginCooldown()
     {
         if (_cooldownCoroutine == null)
             _cooldownCoroutine = _executorHost.StartCoroutine(CooldownRoutine());
     }
 
+    /// <summary>
+    /// Waits for the global cooldown then resets the spell queue.
+    /// </summary>
     private IEnumerator CooldownRoutine()
     {
         _isOnCooldown = true;
         yield return new WaitForSeconds(_data.GlobalCooldown);
-        _currentIndex = 0;
+        ResetSpellQueue();
         _isOnCooldown = false;
         _cooldownCoroutine = null;
-    }  
+    }
 }
