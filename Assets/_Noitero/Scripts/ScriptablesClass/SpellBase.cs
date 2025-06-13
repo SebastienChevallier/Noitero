@@ -7,6 +7,7 @@ public abstract class SpellBase : ScriptableObject, ISpell
     [SerializeField] private string id;
     [SerializeField] private SpellCategory category;
     [SerializeField] private Sprite icon;
+    [SerializeField] private Color colorType;
 
     [SerializeField] private bool canTriggerNext = false;
 
@@ -19,6 +20,8 @@ public abstract class SpellBase : ScriptableObject, ISpell
     public bool TriggerNextOnImpact => triggerNextOnImpact;
 
     public Sprite Icon => icon;
+
+    public Color ColorType => colorType;
 
     public abstract void Execute(SpellExecutionContext context);
 }

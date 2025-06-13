@@ -62,6 +62,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   label: {fileID: 2667573582767743545}
   icon: {fileID: 1018437695357859125}
+  bg: {fileID: 1159040697933968790}
 --- !u!1 &7321240415471982648
 GameObject:
   m_ObjectHideFlags: 0

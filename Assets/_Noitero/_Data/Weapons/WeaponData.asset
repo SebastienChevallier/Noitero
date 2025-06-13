@@ -15,10 +15,17 @@ MonoBehaviour:
   weaponId: 0
   spellSequence:
   - {fileID: 11400000, guid: ff1e3b0fe247cf441b16e2e72c8c634b, type: 2}
-  - {fileID: 11400000, guid: d193acddf6108364da90a043a3b18a05, type: 2}
+  - {fileID: 11400000, guid: 6559a665775c5ad47b836410c929acf6, type: 2}
+  - {fileID: 11400000, guid: ce79b8b6ed3a162439d1d9d4ea336a08, type: 2}
+  - {fileID: 11400000, guid: 6b837055e3cccbe4380b477d91cde76c, type: 2}
+  - {fileID: 11400000, guid: ce79b8b6ed3a162439d1d9d4ea336a08, type: 2}
+  - {fileID: 11400000, guid: f3363caba0d78874b9c1ec0bb9c0299d, type: 2}
+  - {fileID: 11400000, guid: ce79b8b6ed3a162439d1d9d4ea336a08, type: 2}
+  - {fileID: 11400000, guid: 1dd6f1203c08fce4a8f0f882e655a143, type: 2}
   - {fileID: 11400000, guid: ce79b8b6ed3a162439d1d9d4ea336a08, type: 2}
   - {fileID: 11400000, guid: 15f801668b2d1b248b4e9a57f4136d9b, type: 2}
   - {fileID: 11400000, guid: ce79b8b6ed3a162439d1d9d4ea336a08, type: 2}
+  - {fileID: 11400000, guid: d193acddf6108364da90a043a3b18a05, type: 2}
   - {fileID: 11400000, guid: ce79b8b6ed3a162439d1d9d4ea336a08, type: 2}
   delayBetweenSpells: 0.5
   globalCooldown: 1.5

@@ -7,6 +7,7 @@ public class SpellSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 {
     [SerializeField] private TextMeshProUGUI label;
     [SerializeField] private Image icon;
+    [SerializeField] private Image bg;
 
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
@@ -28,6 +29,11 @@ public class SpellSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         if(icon != null && spell.Icon != null)
         {
             icon.sprite = spell.Icon;
+        }
+
+        if(bg != null)
+        {
+            bg.color = spell.ColorType;
         }
     }
 

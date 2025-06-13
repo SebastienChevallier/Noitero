@@ -15,6 +15,7 @@ MonoBehaviour:
   id: 001
   category: 0
   icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  colorType: {r: 1, g: 0, b: 0, a: 1}
   canTriggerNext: 0
   triggerNextOnImpact: 0
   fireballPrefab: {fileID: 447778130735170593, guid: 526169221af51f24c8cd484c3c375e5a, type: 3}

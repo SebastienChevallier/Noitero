@@ -12,7 +12,7 @@ public class DamageMultiplierModifier : SpellBase
             if (proj == null) continue;
             foreach (var hit in proj.GetComponentsInChildren<TriggerHit>())
             {
-                hit.MultiplyDamage(multiplier);
+                //hit.MultiplyDamage(multiplier);
             }
         }
     }
