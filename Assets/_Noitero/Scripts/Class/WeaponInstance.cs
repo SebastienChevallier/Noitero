@@ -23,6 +23,32 @@ public class WeaponInstance
     // Modifiers collected before the next non-modifier spell is cast
     private List<SpellBase> _pendingModifiers = new();
 
+    /// <summary>
+    /// Ensures the runtime sequence matches the data asset. If the asset
+    /// has been modified (order or count) while playing, rebuild the queue
+    /// so newly added or reordered spells are taken into account.
+    /// </summary>
+    private void EnsureSequenceUpToDate()
+    {
+        var dataSeq = _data.SpellSequence;
+        if (dataSeq.Count != _spellSequence.Count)
+        {
+            _spellSequence = new List<SpellBase>(dataSeq);
+            ResetSpellQueue();
+            return;
+        }
+
+        for (int i = 0; i < dataSeq.Count; i++)
+        {
+            if (dataSeq[i] != _spellSequence[i])
+            {
+                _spellSequence = new List<SpellBase>(dataSeq);
+                ResetSpellQueue();
+                break;
+            }
+        }
+    }
+
     public WeaponInstance(WeaponData data, Transform caster, MonoBehaviour executorHost)
     {
         _data = data;
@@ -68,6 +94,8 @@ public class WeaponInstance
     {
         if (_isOnCooldown || _spellOnCooldown)
             return;
+
+        EnsureSequenceUpToDate();
 
         if (_spellQueue == null || _spellQueue.Count == 0)
             ResetSpellQueue();
