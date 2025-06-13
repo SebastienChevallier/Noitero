@@ -13,22 +13,12 @@ public class PlayerMovement : MonoBehaviour
     
     private void Update()
     {
-        if(joystick == null)
+        if (joystick == null || _characterController == null)
             return;
 
-        if(_characterController == null)
-        {
-            //Debug.LogError("CharacterController is not assigned or found on the GameObject.");
-            return;
-        }
-
-        _characterController.Move(GetJoystickDirection() * Time.deltaTime * speed);
+        _characterController.Move(GetJoystickDirection() * speed * Time.deltaTime);
     }
 
-    public Vector3 GetJoystickDirection()
-    {
-        Vector3 direction = new Vector3(joystick.Horizontal, 0, joystick.Vertical);
-
-        return direction.normalized;
-    }
+    public Vector3 GetJoystickDirection() =>
+        new Vector3(joystick.Horizontal, 0f, joystick.Vertical).normalized;
 }

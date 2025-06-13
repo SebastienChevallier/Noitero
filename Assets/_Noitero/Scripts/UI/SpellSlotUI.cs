@@ -24,10 +24,7 @@ public class SpellSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
             label.text = spell.name;
     }
 
-    public void UpdateIndex(int newIndex)
-    {
-        index = newIndex;
-    }
+    public void UpdateIndex(int newIndex) => index = newIndex;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
