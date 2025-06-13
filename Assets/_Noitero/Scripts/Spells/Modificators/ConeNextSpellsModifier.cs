@@ -5,12 +5,19 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Spells/Modifier/Cone Next Spells")]
 public class ConeNextSpellsModifier : SpellBase
 {
-    [SerializeField] private int shots = 3;
+
+    [SerializeField] private int defaultShots = 3;
     [SerializeField] private float coneAngle = 30f;
+    [SerializeField] private string shotCountVariable = "coneShots";
 
     public override void Execute(SpellExecutionContext context)
     {
-        int castCount = Mathf.Min(1, shots);
+        int shots = context.GetVariable<int>(shotCountVariable);
+        if (shots <= 0)
+            shots = defaultShots;
+
+
+        int castCount = Mathf.Min(shots, context.RemainingSpells.Count);
         if (castCount <= 0)
             return;
 
