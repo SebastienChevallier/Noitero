@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class SpellSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    [SerializeField] private Text label;
+    [SerializeField] private TextMeshProUGUI label;
+    [SerializeField] private Image icon;
 
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
@@ -22,6 +24,11 @@ public class SpellSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         this.index = index;
         if (label != null)
             label.text = spell.name;
+
+        if(icon != null && spell.Icon != null)
+        {
+            icon.sprite = spell.Icon;
+        }
     }
 
     public void UpdateIndex(int newIndex) => index = newIndex;

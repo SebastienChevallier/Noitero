@@ -1,10 +1,13 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "SpellBase", menuName = "Spells/SpellBase")]
 public abstract class SpellBase : ScriptableObject, ISpell
 {
     [SerializeField] private string id;
     [SerializeField] private SpellCategory category;
+    [SerializeField] private Sprite icon;
+
     [SerializeField] private bool canTriggerNext = false;
 
     // Nouveau flag : ce sort déclenche le suivant **à l'impact**
@@ -14,6 +17,8 @@ public abstract class SpellBase : ScriptableObject, ISpell
     public SpellCategory Category => category;
     public bool CanTriggerNext => canTriggerNext;
     public bool TriggerNextOnImpact => triggerNextOnImpact;
+
+    public Sprite Icon => icon;
 
     public abstract void Execute(SpellExecutionContext context);
 }

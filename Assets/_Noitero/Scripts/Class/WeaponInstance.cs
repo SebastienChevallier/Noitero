@@ -38,6 +38,7 @@ public class WeaponInstance
         {
             _spellSequence = new List<SpellBase>(dataSeq);
             _dataSnapshot = new List<SpellBase>(dataSeq);
+
             ResetSpellQueue();
             return;
         }

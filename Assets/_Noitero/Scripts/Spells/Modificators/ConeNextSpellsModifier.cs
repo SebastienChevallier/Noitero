@@ -51,6 +51,7 @@ public class ConeNextSpellsModifier : SpellBase
                 mods.AddRange(collectedMods);
 
                 casts.Add((next, originIndex + scan + 1, mods, scan + 1));
+
                 collectedMods.Clear();
                 scan++;
                 continue;
