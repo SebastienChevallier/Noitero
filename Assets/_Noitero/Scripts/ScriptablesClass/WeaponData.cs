@@ -6,8 +6,8 @@ public class WeaponData : ScriptableObject
 {
     [SerializeField] private string weaponId;
     [SerializeField] private List<SpellBase> spellSequence;
-    [SerializeField] private float delayBetweenSpells = 0.1f;
-    [SerializeField] private float globalCooldown = 1.0f;
+    [SerializeField] public float delayBetweenSpells = 0.1f;
+    [SerializeField] public float globalCooldown = 1.0f;
 
     public float GlobalCooldown => globalCooldown;
     public string WeaponId => weaponId;

@@ -16,7 +16,7 @@ public class FireBallSpell : SpellBase
             rb.linearVelocity = context.Direction.normalized * speed;
         }
 
-        instance.AddComponent<TriggerHit>().Init(10);
+        instance.AddComponent<TriggerHit>().Init(10, true);
 
         context.SpawnedProjectiles.Add(instance);
 
